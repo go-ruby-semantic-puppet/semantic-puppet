@@ -20,6 +20,21 @@
 //     ([VersionRange.Include]/[VersionRange.Cover]) and can be intersected
 //     with another range ([VersionRange.Intersection]).
 //
+// On top of these value types it ports the gem's module-dependency graph
+// solver (SemanticPuppet::Dependency):
+//
+//   - [Source] is the injectable provider seam that yields the available
+//     [ModuleRelease] values for a module name; [AddSource]/[Sources]/
+//     [ClearSources] manage the source list as the gem's singleton does.
+//
+//   - [Query] builds a dependency [Graph] for a set of top-level constraints
+//     and fetches the transitive universe of releases; [Resolve] walks that
+//     graph, backtracking on conflict and preferring the newest satisfying
+//     (stable-over-prerelease) release, and returns the resolved release set
+//     or an [*UnsatisfiableGraph]. Module- and graph-level constraints
+//     ([Graph.AddConstraint]/[Graph.AddGraphConstraint]) and dependency
+//     cycles are honoured exactly as in the gem.
+//
 // The port is faithful to the observable behaviour of the gem, including its
 // prerelease-inclusion rule: a pre-release version is only matched by a range
 // when some clause of the range explicitly names a pre-release sharing the
